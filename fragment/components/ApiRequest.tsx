@@ -68,8 +68,7 @@ export const ApiRequest = (props: ApiRequestType) => {
       },
       errorRetryCount: 0,
       revalidateOnFocus: false,
-      keepPreviousData: false,
-    },
+    }
   );
 
   useEffect(() => {

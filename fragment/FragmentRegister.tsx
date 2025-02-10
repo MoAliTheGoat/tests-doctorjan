@@ -68,7 +68,7 @@ export const Fragment = ({
         }
       },
     }),
-    []
+    [apiConfig, previewApiConfig]
   );
 
   return (
@@ -87,7 +87,7 @@ export const Fragment = ({
 export const fragmentMeta: GlobalContextMeta<FragmentProps> = {
   name: "Fragment",
   displayName: "Fragment",
-  importPath: "../fragment/fragment",
+  importPath: "../fragment/FragmentRegister", // ✅ Ensure this matches the file name & location
   props: {
     apiConfig: {
       displayName: "API Config",
@@ -198,6 +198,7 @@ export const fragmentMeta: GlobalContextMeta<FragmentProps> = {
     },
   },
 };
-function eventLogger(eventName: string, eventData: Record<string, any>): any {
-  throw new Error("Function not implemented.");
+
+function eventLogger(eventName: string, eventData: Record<string, any>): void {
+  console.log(`Event: ${eventName}`, eventData);
 }

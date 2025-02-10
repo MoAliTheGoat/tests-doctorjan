@@ -1,10 +1,9 @@
 import * as React from "react";
 import { PlasmicCanvasHost } from "@plasmicapp/loader-nextjs";
-import { PLASMIC } from "@/plasmic-init";
 import Head from "next/head";
 
 // Import fragment registration
-import "@/fragment";
+import "../fragment/FragmentRegister"; // ✅ Ensure this path is correct
 
 export default function PlasmicHost() {
   return (

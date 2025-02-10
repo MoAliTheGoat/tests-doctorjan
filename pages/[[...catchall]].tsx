@@ -17,10 +17,16 @@ export default function PlasmicLoaderPage(props: {
 }) {
   const { plasmicData, queryCache } = props;
   const router = useRouter();
+
+  // Get Telegram user ID from URL query
+  const userId = router.query.userId;
+
   if (!plasmicData || plasmicData.entryCompMetas.length === 0) {
     return <Error statusCode={404} />;
   }
+
   const pageMeta = plasmicData.entryCompMetas[0];
+
   return (
     <PlasmicRootProvider
       loader={PLASMIC}
@@ -30,21 +36,36 @@ export default function PlasmicLoaderPage(props: {
       pageParams={pageMeta.params}
       pageQuery={router.query}
     >
-      <PlasmicComponent component={pageMeta.displayName} />
+      <div>
+        <h1>Welcome to Plasmic Web App</h1>
+        {userId ? <p>Telegram User ID: {userId}</p> : <p>Loading user...</p>}
+
+        {/* Pass the userId as a prop to Plasmic components */}
+        <PlasmicComponent
+          component={pageMeta.displayName}
+          componentProps={{ userId: userId }}
+        />
+      </div>
     </PlasmicRootProvider>
   );
 }
 
 export const getStaticProps: GetStaticProps = async (context) => {
   const { catchall } = context.params ?? {};
-  const plasmicPath = typeof catchall === 'string' ? catchall : Array.isArray(catchall) ? `/${catchall.join('/')}` : '/';
+  const plasmicPath =
+    typeof catchall === "string"
+      ? catchall
+      : Array.isArray(catchall)
+      ? `/${catchall.join("/")}`
+      : "/";
+
   const plasmicData = await PLASMIC.maybeFetchComponentData(plasmicPath);
   if (!plasmicData) {
-    // non-Plasmic catch-all
     return { props: {} };
   }
+
   const pageMeta = plasmicData.entryCompMetas[0];
-  // Cache the necessary data fetched for the page
+
   const queryCache = await extractPlasmicQueryData(
     <PlasmicRootProvider
       loader={PLASMIC}
@@ -55,9 +76,9 @@ export const getStaticProps: GetStaticProps = async (context) => {
       <PlasmicComponent component={pageMeta.displayName} />
     </PlasmicRootProvider>
   );
-  // Use revalidate if you want incremental static regeneration
+
   return { props: { plasmicData, queryCache }, revalidate: 60 };
-}
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const pageModules = await PLASMIC.fetchPages();
@@ -69,4 +90,4 @@ export const getStaticPaths: GetStaticPaths = async () => {
     })),
     fallback: "blocking",
   };
-}
+};

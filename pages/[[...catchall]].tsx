@@ -37,9 +37,6 @@ export default function PlasmicLoaderPage(props: {
       pageQuery={router.query}
     >
       <div>
-        <h1>Welcome to Plasmic Web App</h1>
-        {userId ? <p>Telegram User ID: {userId}</p> : <p>Loading user...</p>}
-
         {/* Pass the userId as a prop to Plasmic components */}
         <PlasmicComponent
           component={pageMeta.displayName}
